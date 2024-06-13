@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toCollection;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 import static javax.lang.model.element.ElementKind.METHOD;
+import static javax.lang.model.element.Modifier.PUBLIC;
 import static net.jfaker.util.StringUtil.firstLetterToLowerCase;
 
 /**
@@ -50,7 +51,8 @@ public final class PropertyFactory {
             final var elements = getEnclosedElementsFromClasses(
                     generatedClass.getQualifiedName(),
                     elementUtils,
-                    e -> e.getKind() == METHOD &&
+                    e -> e.getModifiers().contains(PUBLIC) &&
+                            e.getKind() == METHOD &&
                             e.getSimpleName().toString().startsWith("set") &&
                             !settersToIgnore.contains(e.getSimpleName().toString())
             );
@@ -60,7 +62,8 @@ public final class PropertyFactory {
             final var elements = getEnclosedElementsFromClasses(
                     generatedClass.getQualifiedName(),
                     elementUtils,
-                    e -> e.getKind() == CONSTRUCTOR
+                    e -> e.getModifiers().contains(PUBLIC) &&
+                            e.getKind() == CONSTRUCTOR
             );
             return extractPropsFromConstructor(elements, argsNames);
 
@@ -70,7 +73,8 @@ public final class PropertyFactory {
             final var elements = getEnclosedElementsFromClasses(
                     builderStrategy.builderQualifiedName(),
                     elementUtils,
-                    e -> e.getKind() == METHOD &&
+                    e -> e.getModifiers().contains(PUBLIC) &&
+                            e.getKind() == METHOD &&
                             e.getSimpleName().toString().startsWith(prefix) &&
                             !methodsToIgnore.contains(e.getSimpleName().toString())
             );

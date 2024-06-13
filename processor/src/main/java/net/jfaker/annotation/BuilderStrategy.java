@@ -58,6 +58,7 @@ public @interface BuilderStrategy {
 
     /**
      * if your methods used to set value on builder properties have a prefix, input prefix here. ex.: with
+     * if your methods has no prefix enter with empty String
      */
     String prefixMethods() default "with";
 
