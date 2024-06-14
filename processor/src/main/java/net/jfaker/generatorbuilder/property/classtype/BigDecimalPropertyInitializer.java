@@ -23,7 +23,7 @@ public class BigDecimalPropertyInitializer extends AbstractPropertyInitializerBy
                 () -> {
                            final var integerPart = faker.number().digits(3);
                            final var decimalPart = faker.number().digits(2);
-                           return new $T(integerPart + \".\" + decimalPart);
+                           return new $T(integerPart + "." + decimalPart);
                 }
                 """,
                 ClassName.get("java.math", "BigDecimal")

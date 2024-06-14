@@ -6,7 +6,7 @@ public abstract class BuildMethodInfo {
     private final ClassInfo resultClass;
     private final ClassInfo usedInStatement;
 
-    public BuildMethodInfo(final String name,
+    protected BuildMethodInfo(final String name,
                            final ClassInfo resultClass,
                            final ClassInfo usedInStatement) {
         this.name = name;

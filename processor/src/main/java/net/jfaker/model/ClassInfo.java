@@ -1,9 +1,7 @@
 package net.jfaker.model;
 
 import javax.lang.model.element.TypeElement;
-
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static javax.lang.model.element.ElementKind.RECORD;
@@ -54,7 +52,7 @@ public class ClassInfo {
         this.qualifiedName = qualifiedName;
         final var splitQualifiedName = qualifiedName.split("\\.");
         if (isInnerClass) {
-            this.simpleName = String.join(".", Stream.of(splitQualifiedName).skip(splitQualifiedName.length - 2).toList());
+            this.simpleName = String.join(".", Stream.of(splitQualifiedName).skip(splitQualifiedName.length - 2L).toList());
             this.packageName = String.join(".", Stream.of(splitQualifiedName).skip(2).toList());
         } else {
             this.packageName = qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
@@ -91,6 +89,10 @@ public class ClassInfo {
 
     public TypeElement getTypeElement() {
         return typeElement;
+    }
+
+    public boolean isInnerClass() {
+        return isInnerClass;
     }
 
     public boolean isARecord(){

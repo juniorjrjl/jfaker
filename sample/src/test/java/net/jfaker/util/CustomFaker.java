@@ -20,8 +20,8 @@ import static net.jfaker.model.BuilderInstantiateMethod.DIRECT_INSTANTIATE;
                         botBuildStrategy = @BotBuildStrategy(
                                 setterStrategy = @SetterStrategy(
                                         fieldsConfiguration = {
-                                                @FieldConfiguration(name = "systemUser", BotSource = "SystemUserModelBot"),
-                                                @FieldConfiguration(name = "contacts", BotSource = "ContactModelBot")
+                                                @FieldConfiguration(name = "systemUser", botSource = "SystemUserModelBot"),
+                                                @FieldConfiguration(name = "contacts", botSource = "ContactModelBot")
                                         }
                                 )
                         )

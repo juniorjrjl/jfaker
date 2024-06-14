@@ -38,7 +38,7 @@ public abstract class BotGenerator<T extends BuildMethodInfo> {
      * @param types used to convert primitive types to Class
      * @param propertyInitializers list of class used to initialize properties in bots
      */
-    public BotGenerator(final Types types, final List<IPropertyInitializer> propertyInitializers){
+    protected BotGenerator(final Types types, final List<IPropertyInitializer> propertyInitializers){
         this.types = types;
         this.propertyInitializers = propertyInitializers;
     }
@@ -147,8 +147,8 @@ public abstract class BotGenerator<T extends BuildMethodInfo> {
      * @return Supplier used by bot
      */
     private ParameterizedTypeName generateSupplierFromType(final TypeMirror type){
-        final var ClassType = type.getKind().isPrimitive() ? types.boxedClass((PrimitiveType)type).asType() : type;
-        return ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(ClassType));
+        final var classType = type.getKind().isPrimitive() ? types.boxedClass((PrimitiveType)type).asType() : type;
+        return ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(classType));
     }
 
 }

@@ -36,15 +36,15 @@ public class BotGeneratorBuilderStrategy extends BotGenerator<BuildMethodInfoBui
                 .returns(ClassName.get(resultClass.getPackageName(), resultClass.getSimpleName()));
         final var statementBuilder = new StringBuilder();
         if (buildMethodInfo.getBuilderInstantiateMethod() == STATIC_METHOD_CLASS){
-            statementBuilder.append(String.format("return %s.%s\n", buildMethodInfo.getUsedInStatement().getSimpleName(), buildMethodInfo.getBuilderMethodName()));
+            statementBuilder.append(String.format("return %s.%s%n", buildMethodInfo.getUsedInStatement().getSimpleName(), buildMethodInfo.getBuilderMethodName()));
             for (int i = 0; i < settersBuilderStatement.size(); i++) {
-                statementBuilder.append(String.format("    .%s(%s.get())\n", settersBuilderStatement.get(i).getName(), settersValues.get(i)));
+                statementBuilder.append(String.format("    .%s(%s.get())%n", settersBuilderStatement.get(i).getName(), settersValues.get(i)));
             }
         } else {
             builder.addStatement("var builder = new $N()", buildMethodInfo.getUsedInStatement().getSimpleName());
-            statementBuilder.append(String.format(" return builder.%s(%s.get())\n", settersBuilderStatement.get(0).getName(), settersValues.get(0)));
+            statementBuilder.append(String.format(" return builder.%s(%s.get())%n", settersBuilderStatement.get(0).getName(), settersValues.get(0)));
             for (int i = 1; i < settersBuilderStatement.size(); i++) {
-                statementBuilder.append(String.format("    .%s(%s.get())\n", settersBuilderStatement.get(i).getName(), settersValues.get(i)));
+                statementBuilder.append(String.format("    .%s(%s.get())%n", settersBuilderStatement.get(i).getName(), settersValues.get(i)));
             }
         }
         statementBuilder.append(String.format("    .%s", buildMethodInfo.getBuildMethodName()));

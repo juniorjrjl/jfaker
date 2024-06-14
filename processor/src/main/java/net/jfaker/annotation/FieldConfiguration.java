@@ -29,6 +29,6 @@ public @interface FieldConfiguration {
      * You can use this prop to set value for a Class or java.util.List of some class
      * ex.: UserBot
      */
-    String BotSource() default "";
+    String botSource() default "";
 
 }

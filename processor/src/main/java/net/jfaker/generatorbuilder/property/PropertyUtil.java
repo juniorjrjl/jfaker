@@ -29,7 +29,7 @@ public class PropertyUtil {
     /**
      * list with properties initializer
      */
-    public static List<IPropertyInitializer> PROPERTIES_INITIALIZERS = List.of(
+    public static final List<IPropertyInitializer> PROPERTIES_INITIALIZERS = List.of(
                 new ListBotPropertyInitializer(),
                 new SingleBotPropertyInitializer(),
                 new BooleanPropertyInitializer(),

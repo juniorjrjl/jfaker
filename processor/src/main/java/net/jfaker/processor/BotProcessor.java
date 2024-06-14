@@ -45,17 +45,16 @@ import static net.jfaker.generatorbuilder.property.PropertyUtil.PROPERTIES_INITI
 @SupportedAnnotationTypes("net.jfaker.annotation.FakerInfo")
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class BotProcessor extends AbstractProcessor {
-
-    private BotGenerator<BuildMethodInfoConstructorStrategy> botGeneratorConstructorStrategy;
-    private BotGenerator<BuildMethodInfoSetterStrategy> botGeneratorSetterStrategy;
-    private BotGenerator<BuildMethodInfoBuilderStrategy> botGeneratorBuilderStrategy;
     
     @Override
     public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
         final var elementUtils = processingEnv.getElementUtils();
-        botGeneratorConstructorStrategy = new BotGeneratorConstructorStrategy(processingEnv.getTypeUtils(), PROPERTIES_INITIALIZERS);
-        botGeneratorSetterStrategy = new BotGeneratorSetterStrategy(processingEnv.getTypeUtils(), PROPERTIES_INITIALIZERS);
-        botGeneratorBuilderStrategy = new BotGeneratorBuilderStrategy(processingEnv.getTypeUtils(), PROPERTIES_INITIALIZERS);
+        final BotGenerator<BuildMethodInfoConstructorStrategy> botGeneratorConstructorStrategy =
+                new BotGeneratorConstructorStrategy(processingEnv.getTypeUtils(), PROPERTIES_INITIALIZERS);
+        final BotGenerator<BuildMethodInfoSetterStrategy> botGeneratorSetterStrategy =
+                new BotGeneratorSetterStrategy(processingEnv.getTypeUtils(), PROPERTIES_INITIALIZERS);
+        final BotGenerator<BuildMethodInfoBuilderStrategy> botGeneratorBuilderStrategy =
+                new BotGeneratorBuilderStrategy(processingEnv.getTypeUtils(), PROPERTIES_INITIALIZERS);
 
         var optionalElement = roundEnv.getElementsAnnotatedWith(FakerInfo.class)
                 .stream()
@@ -136,20 +135,6 @@ public class BotProcessor extends AbstractProcessor {
     }
 
     /**
-     * extract properties from superclass and subclass
-     * @param superclass superclass info
-     * @param subclass subclass info
-     * @return a methods, constructors, variables, etc. belongs to classes
-     */
-    private List<? extends Element> getEnclosedElementsFromClasses(final ClassInfo superclass, final ClassInfo subclass){
-        return superclass.equals(subclass) ? subclass.getTypeElement().getEnclosedElements() :
-         Stream.concat(
-                superclass.getTypeElement().getEnclosedElements().stream(),
-                subclass.getTypeElement().getEnclosedElements().stream()
-        ).toList();
-    }
-
-    /**
      * get a list of fields defined to init null in bots
      * @param botBuildStrategy bot configuration
      * @return a list of fields who will init with null value
@@ -188,7 +173,7 @@ public class BotProcessor extends AbstractProcessor {
                         FieldConfiguration::name,
                         f -> {
                             if (!f.fakerProvider().isBlank()) return f.fakerProvider();
-                            if (!f.BotSource().isBlank()) return f.BotSource();
+                            if (!f.botSource().isBlank()) return f.botSource();
                             return "";
                         }
                 )
