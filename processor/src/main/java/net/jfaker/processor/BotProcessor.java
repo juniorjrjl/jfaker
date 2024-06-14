@@ -37,7 +37,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static javax.tools.Diagnostic.Kind.ERROR;
 import static net.jfaker.generatorbuilder.property.PropertyUtil.PROPERTIES_INITIALIZERS;
+import static net.jfaker.util.ValidationUtil.validateAutoFakerBot;
+import static net.jfaker.util.ValidationUtil.validateFakerInfo;
+import static net.jfaker.util.ValidationUtil.validateFieldConfiguration;
 
 /**
  * Class who will process annotation {@link net.jfaker.annotation.FakerInfo FakerInfo} and generate bots
@@ -62,6 +66,7 @@ public class BotProcessor extends AbstractProcessor {
         if (optionalElement.isEmpty()) return false;
 
         final var botClassesInfo = buildBotClass(optionalElement.get(), elementUtils);
+
         final var javaFile = botClassesInfo.stream().map(b -> {
             if (b.getBuildMethodInfo() instanceof BuildMethodInfoSetterStrategy buildMethodInfo){
                 return botGeneratorSetterStrategy.create(b, buildMethodInfo).indent("    ").build();
@@ -84,10 +89,15 @@ public class BotProcessor extends AbstractProcessor {
      * @return a list with bots information
      */
     private List<BotClassInfo> buildBotClass(final Element fakerElement, final Elements elementUtils){
-        final var fakerInfo = new ClassInfo(fakerElement.toString());
+        final var fakerInfo = new ClassInfo(
+                fakerElement.toString(),
+                elementUtils.getTypeElement(fakerElement.toString())
+        );
         final var fakerInfoAnnotation = fakerElement.getAnnotation(FakerInfo.class);
+        validateFakerInfo(processingEnv.getMessager(), fakerInfoAnnotation, fakerInfo);
         return Stream.of(fakerInfoAnnotation.botsConfiguration())
                 .map(b -> {
+                    validateAutoFakerBot(processingEnv.getMessager(), b);
                     final var generatedClass = new ClassInfo(
                             b.generatedInstance(),
                             elementUtils.getTypeElement(b.generatedInstance())
@@ -113,6 +123,7 @@ public class BotProcessor extends AbstractProcessor {
                     final var propsMap = PropertyFactory.generateProps(
                             generatedClass,
                             elementUtils,
+                            processingEnv.getMessager(),
                             botBuildStrategy
                     );
                     return BotClassInfo.builder()
@@ -133,6 +144,7 @@ public class BotProcessor extends AbstractProcessor {
                             .build();
                 }).toList();
     }
+
 
     /**
      * get a list of fields defined to init null in bots
@@ -161,15 +173,16 @@ public class BotProcessor extends AbstractProcessor {
         final var setterStrategy = botBuildStrategy.setterStrategy();
         final var constructorStrategy = botBuildStrategy.constructorStrategy();
         final var builderStrategy = botBuildStrategy.builderStrategy();
-        Stream<FieldConfiguration> fieldsStream;
+        List<FieldConfiguration> fieldsConfiguration;
         if (!setterStrategy.ignoreConfig()){
-            fieldsStream = Stream.of(setterStrategy.fieldsConfiguration());
+            fieldsConfiguration = (Stream.of(setterStrategy.fieldsConfiguration()).toList());
         } else if (!constructorStrategy.ignoreConfig()) {
-            fieldsStream = Stream.of(constructorStrategy.fieldsConfiguration());
+            fieldsConfiguration = (Stream.of(constructorStrategy.fieldsConfiguration()).toList());
         } else {
-            fieldsStream = Stream.of(builderStrategy.fieldsConfiguration());
+            fieldsConfiguration = (Stream.of(builderStrategy.fieldsConfiguration()).toList());
         }
-        return fieldsStream.collect(Collectors.toMap(
+        fieldsConfiguration.forEach(f -> validateFieldConfiguration(processingEnv.getMessager(), f));
+        return fieldsConfiguration.stream().collect(Collectors.toMap(
                         FieldConfiguration::name,
                         f -> {
                             if (!f.fakerProvider().isBlank()) return f.fakerProvider();
@@ -225,7 +238,7 @@ public class BotProcessor extends AbstractProcessor {
         try {
             javaFile.writeTo(filer);
         }catch (IOException ex){
-            throw new RuntimeException(ex);
+            processingEnv.getMessager().printMessage(ERROR, ex.getMessage());
         }
     }
 

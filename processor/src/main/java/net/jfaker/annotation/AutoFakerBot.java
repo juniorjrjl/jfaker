@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 public @interface AutoFakerBot {
 
     /**
-     *Qualified name of class who will be inherited by all bots
+     * Qualified name of class who will be inherited by all bots
      * by default bots will use a {@link net.jfaker.bot.AbstractBot AbstractBot}
      */
     String abstractBotQualifiedName() default "net.jfaker.bot.AbstractBot";
