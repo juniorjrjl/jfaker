@@ -63,6 +63,10 @@ public abstract class BotGenerator<T extends BuildMethodInfo> {
 
         generateBuilderClass.addField(generateFakerProperty(botClassInfo.getFaker()));
 
+        generateBuilderClass.addMethod(MethodSpec.constructorBuilder()
+                        .addModifiers(PRIVATE)
+                .build());
+
         botClassInfo.getProperties()
                 .forEach(p -> generateBuilderClass.addField(generateProps(botClassInfo, p)));
 
@@ -107,10 +111,17 @@ public abstract class BotGenerator<T extends BuildMethodInfo> {
     private FieldSpec generateProps(final BotClassInfo botClassInfo, final PropertyInfo propertyInfo){
         final var type = generateSupplierFromType(propertyInfo.originalType());
         final var builder = FieldSpec.builder(type, propertyInfo.name(), PRIVATE);
-        propertyInitializers.stream().filter(p -> p.isEligible(botClassInfo, propertyInfo))
-                .findFirst()
-                .orElse(new NullablePropertyInitializer())
-                .setInitializerBlock(propertyInfo, builder);
+        final var nullablePropertyInitializer = new NullablePropertyInitializer();
+        if (propertyInfo.nullable()){
+            nullablePropertyInitializer.setInitializerBlock(propertyInfo, builder);
+        } else if (propertyInfo.hasCustomSource() && propertyInfo.customSource().startsWith("faker")){
+            builder.initializer("() -> " + propertyInfo.customSource());
+        } else {
+            propertyInitializers.stream().filter(p -> p.isEligible(botClassInfo, propertyInfo))
+                    .findFirst()
+                    .orElse(nullablePropertyInitializer)
+                    .setInitializerBlock(propertyInfo, builder);
+        }
         return builder.build();
     }
 

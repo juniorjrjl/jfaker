@@ -1,3 +1,2 @@
 rootProject.name = "jfaker"
-include("processor")
-include("sample")
+include("processor", "integration-tests")

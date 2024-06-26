@@ -4,6 +4,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import net.jfaker.generatorbuilder.property.IPropertyInitializer;
 import net.jfaker.model.BuildMethodInfoSetterStrategy;
+import net.jfaker.util.StringUtil;
 
 import javax.lang.model.util.Types;
 import java.util.List;
@@ -30,7 +31,7 @@ public class BotGeneratorSetterStrategy extends BotGenerator<BuildMethodInfoSett
         final var usedInStatement = buildMethodInfo.getUsedInStatement();
         final var settersStatement = buildMethodInfo.getSettersStatement();
         final var settersValues= buildMethodInfo.getSettersValues();
-        final var varName = botResultInfo.getSimpleName().toLowerCase();
+        final var varName = StringUtil.firstLetterToLowerCase(botResultInfo.getSimpleName());
         final var builder = MethodSpec.methodBuilder(buildMethodInfo.getName())
                 .addModifiers(PUBLIC)
                 .returns(ClassName.get(botResultInfo.getPackageName(), botResultInfo.getSimpleName()))

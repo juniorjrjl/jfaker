@@ -156,7 +156,7 @@ public final class PropertyFactory {
                     );
         } else {
             return constructorStream
-                    .filter(c -> c.getParameters().stream().map(a -> a.getSimpleName().toString()).toList().equals(argsNames))
+                    .filter(c -> c.getParameters().stream().map(a -> a.asType().toString()).toList().equals(argsNames))
                     .findFirst()
                     .orElseThrow()
                     .getParameters()

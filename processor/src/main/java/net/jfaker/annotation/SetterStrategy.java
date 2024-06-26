@@ -24,7 +24,7 @@ public @interface SetterStrategy {
     String[] fieldsInitNull() default "";
 
     /**
-     * Array of String with fields will be ignored in Bot creation
+     * Array of String with setters will be ignored in Bot creation
      */
     String[] settersToIgnore() default "";
 
