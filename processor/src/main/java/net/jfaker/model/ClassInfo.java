@@ -103,24 +103,4 @@ public class ClassInfo {
         return !isARecord();
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ClassInfo classInfo)) return false;
-        return Objects.equals(packageName, classInfo.packageName) &&
-                Objects.equals(simpleName, classInfo.simpleName) &&
-                Objects.equals(qualifiedName, classInfo.qualifiedName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(packageName, simpleName, qualifiedName);
-    }
-
-    @Override
-    public String toString() {
-        return "ClassInfo{" +
-                "qualifiedName='" + qualifiedName + '\'' +
-                '}';
-    }
 }

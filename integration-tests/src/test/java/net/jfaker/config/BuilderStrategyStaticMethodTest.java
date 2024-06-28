@@ -691,4 +691,226 @@ class BuilderStrategyStaticMethodTest {
                 .hasPrivatePropertiesWithInitValue(Map.of("nested", "NestedDTOBot.builder().build(faker.number().randomDigitNotZero())"));
     }
 
+    @Test
+    void whenBuilderMethodHasCustomNameThenUseIt() throws IOException {
+        final var generatedClass = "SampleDTO";
+        final var toGenerateBot = JavaFileObjects.forSourceLines(
+                "net.jfaker.dto.SampleDTO",
+                """
+                      package net.jfaker.dto;
+                      public record %s(String stub){
+                      public static SampleDTOBuilder builderInstance(){
+                          return new SampleDTOBuilder();
+                      }
+                      public static class SampleDTOBuilder{
+                         private String stub;
+                         public SampleDTOBuilder withStub(final String stub){
+                             this.stub = stub;
+                             return this;
+                         }
+                         public SampleDTO build(){
+                             return new SampleDTO(stub);
+                         }
+                      }
+                      }
+                      """.formatted(generatedClass));
+        final var botSimpleName = "SampleDTOBot";
+        final var botGeneratedPackage = "net.jfaker.dto";
+        final var botQualifiedName = "net.jfaker.bot.SampleDTOBot";
+        final var botConfig= JavaFileObjects.forSourceLines(
+                "net.jfaker.config.CustomFaker",
+                """
+                        package net.jfaker.config;
+                       
+                        import net.datafaker.Faker;
+                        import net.jfaker.annotation.AutoFakerBot;
+                        import net.jfaker.annotation.BotBuildStrategy;
+                        import net.jfaker.annotation.FakerInfo;
+                        import net.jfaker.annotation.BuilderStrategy;
+                       
+                        @FakerInfo(
+                                botsConfiguration = {
+                                    @AutoFakerBot(
+                                        generatedInstance = "%s.%s",
+                                        packageToGenerate = "net.jfaker.bot",
+                                        botBuildStrategy = @BotBuildStrategy(
+                                            builderStrategy = @BuilderStrategy(
+                                                builderQualifiedName = "net.jfaker.dto.SampleDTO.SampleDTOBuilder",
+                                                staticBuilderInvocation = "builderInstance()"
+                                            )
+                                        )
+                                    )
+                                }
+                        )
+                        public class CustomFaker extends Faker {}
+                       
+                       """.formatted(botGeneratedPackage, generatedClass));
+
+        final var compilation = Compiler.javac()
+                .withProcessors(new BotProcessor())
+                .compile(toGenerateBot, botConfig);
+
+        CompilationSubject.assertThat(compilation).succeeded();
+        assertThat(compilation.generatedSourceFiles().size()).isOne();
+        CompilationSubject.assertThat(compilation).generatedSourceFile(botQualifiedName);
+        var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
+                .getCharContent(true).toString();
+
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+                .buildMethodUsingBuilderStrategyWithStaticMethodClass(
+                        "builderInstance",
+                        "build",
+                        "with",
+                        List.of("stub"));
+
+    }
+
+    @Test
+    void whenBuildMethodHasCustomNameThenUseIt() throws IOException {
+        final var generatedClass = "SampleDTO";
+        final var toGenerateBot = JavaFileObjects.forSourceLines(
+                "net.jfaker.dto.SampleDTO",
+                """
+                      package net.jfaker.dto;
+                      public record %s(String stub){
+                      public static SampleDTOBuilder builder(){
+                          return new SampleDTOBuilder();
+                      }
+                      public static class SampleDTOBuilder{
+                         private String stub;
+                         public SampleDTOBuilder withStub(final String stub){
+                             this.stub = stub;
+                             return this;
+                         }
+                         public SampleDTO buildInstance(){
+                             return new SampleDTO(stub);
+                         }
+                      }
+                      }
+                      """.formatted(generatedClass));
+        final var botSimpleName = "SampleDTOBot";
+        final var botGeneratedPackage = "net.jfaker.dto";
+        final var botQualifiedName = "net.jfaker.bot.SampleDTOBot";
+        final var botConfig= JavaFileObjects.forSourceLines(
+                "net.jfaker.config.CustomFaker",
+                """
+                        package net.jfaker.config;
+                       
+                        import net.datafaker.Faker;
+                        import net.jfaker.annotation.AutoFakerBot;
+                        import net.jfaker.annotation.BotBuildStrategy;
+                        import net.jfaker.annotation.FakerInfo;
+                        import net.jfaker.annotation.BuilderStrategy;
+                       
+                        @FakerInfo(
+                                botsConfiguration = {
+                                    @AutoFakerBot(
+                                        generatedInstance = "%s.%s",
+                                        packageToGenerate = "net.jfaker.bot",
+                                        botBuildStrategy = @BotBuildStrategy(
+                                            builderStrategy = @BuilderStrategy(
+                                                builderQualifiedName = "net.jfaker.dto.SampleDTO.SampleDTOBuilder",
+                                                buildMethod = "buildInstance()"
+                                            )
+                                        )
+                                    )
+                                }
+                        )
+                        public class CustomFaker extends Faker {}
+                       
+                       """.formatted(botGeneratedPackage, generatedClass));
+
+        final var compilation = Compiler.javac()
+                .withProcessors(new BotProcessor())
+                .compile(toGenerateBot, botConfig);
+
+        CompilationSubject.assertThat(compilation).succeeded();
+        assertThat(compilation.generatedSourceFiles().size()).isOne();
+        CompilationSubject.assertThat(compilation).generatedSourceFile(botQualifiedName);
+        var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
+                .getCharContent(true).toString();
+
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+                .buildMethodUsingBuilderStrategyWithStaticMethodClass(
+                        "builder",
+                        "buildInstance",
+                        "with",
+                        List.of("stub"));
+
+    }
+
+    @Test
+    void whenWithMethodHasCustomPrefixThenUseIt() throws IOException {
+        final var generatedClass = "SampleDTO";
+        final var toGenerateBot = JavaFileObjects.forSourceLines(
+                "net.jfaker.dto.SampleDTO",
+                """
+                      package net.jfaker.dto;
+                      public record %s(String stub){
+                      public static SampleDTOBuilder builder(){
+                          return new SampleDTOBuilder();
+                      }
+                      public static class SampleDTOBuilder{
+                         private String stub;
+                         public SampleDTOBuilder aStub(final String stub){
+                             this.stub = stub;
+                             return this;
+                         }
+                         public SampleDTO build(){
+                             return new SampleDTO(stub);
+                         }
+                      }
+                      }
+                      """.formatted(generatedClass));
+        final var botSimpleName = "SampleDTOBot";
+        final var botGeneratedPackage = "net.jfaker.dto";
+        final var botQualifiedName = "net.jfaker.bot.SampleDTOBot";
+        final var botConfig= JavaFileObjects.forSourceLines(
+                "net.jfaker.config.CustomFaker",
+                """
+                        package net.jfaker.config;
+                       
+                        import net.datafaker.Faker;
+                        import net.jfaker.annotation.AutoFakerBot;
+                        import net.jfaker.annotation.BotBuildStrategy;
+                        import net.jfaker.annotation.FakerInfo;
+                        import net.jfaker.annotation.BuilderStrategy;
+                       
+                        @FakerInfo(
+                                botsConfiguration = {
+                                    @AutoFakerBot(
+                                        generatedInstance = "%s.%s",
+                                        packageToGenerate = "net.jfaker.bot",
+                                        botBuildStrategy = @BotBuildStrategy(
+                                            builderStrategy = @BuilderStrategy(
+                                                builderQualifiedName = "net.jfaker.dto.SampleDTO.SampleDTOBuilder",
+                                                prefixMethods = "a"
+                                            )
+                                        )
+                                    )
+                                }
+                        )
+                        public class CustomFaker extends Faker {}
+                       
+                       """.formatted(botGeneratedPackage, generatedClass));
+
+        final var compilation = Compiler.javac()
+                .withProcessors(new BotProcessor())
+                .compile(toGenerateBot, botConfig);
+
+        CompilationSubject.assertThat(compilation).succeeded();
+        assertThat(compilation.generatedSourceFiles().size()).isOne();
+        CompilationSubject.assertThat(compilation).generatedSourceFile(botQualifiedName);
+        var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
+                .getCharContent(true).toString();
+
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+                .buildMethodUsingBuilderStrategyWithStaticMethodClass(
+                        "builder",
+                        "build",
+                        "a",
+                        List.of("stub"));
+
+    }
+
 }

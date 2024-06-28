@@ -73,36 +73,6 @@ public class BotClassInfo extends ClassInfo{
         return buildMethodInfo;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BotClassInfo that)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(botSuperClassInfo, that.botSuperClassInfo) &&
-                Objects.equals(faker, that.faker) &&
-                Objects.equals(properties, that.properties) &&
-                Objects.equals(settersBuilder, that.settersBuilder) &&
-                Objects.equals(generatedClass, that.generatedClass);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), botSuperClassInfo, faker, properties, settersBuilder, generatedClass);
-    }
-
-    @Override
-    public String toString() {
-        return "BotClassInfo{" +
-                super.toString() +
-                ", botSuperClassInfo=" + botSuperClassInfo +
-                ", faker=" + faker +
-                ", properties=" + properties +
-                ", settersBuilder=" + settersBuilder +
-                ", generatedClass=" + generatedClass +
-                '}';
-    }
-
-
     /**
      * Builder class
      */
@@ -142,18 +112,8 @@ public class BotClassInfo extends ClassInfo{
             return this;
         }
 
-        public BotClassInfoBuilder withProperty(final PropertyInfo property){
-            this.properties.add(property);
-            return this;
-        }
-
         public BotClassInfoBuilder withSetterBuilder(final List<SetterBuilderMethodInfo> setterBuilder){
             this.settersBuilder.addAll(setterBuilder);
-            return this;
-        }
-
-        public BotClassInfoBuilder withSetterBuilder(final SetterBuilderMethodInfo setterBuilder){
-            this.settersBuilder.add(setterBuilder);
             return this;
         }
 

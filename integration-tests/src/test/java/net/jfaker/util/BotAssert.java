@@ -236,14 +236,13 @@ public class BotAssert extends AbstractAssert<BotAssert, String> {
     public BotAssert buildMethodUsingBuilderStrategyWithDirectInstantiate(final String builderClass,
                                                                           final String builderMethodsPrefix,
                                                                           final String buildMethod,
-                                                                          final boolean innerBuilder,
                                                                           final List<String> properties){
         isNotNull();
         final var indexStartBuildStatement = getIndexOfStatement(
                 """
                         var builder = new %s();
                         return builder
-                """.formatted(innerBuilder ? generatedClass + "." + builderClass : builderClass),
+                """.formatted(builderClass),
                 "Expected bot using builder strategy with direct Instantiate"
         );
         final var indexEndBuildStatement = getIndexOfStatement(

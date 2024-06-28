@@ -41,29 +41,6 @@ public class SetterBuilderMethodInfo{
         return originalType;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SetterBuilderMethodInfo that)) return false;
-        return Objects.equals(name, that.name) &&
-                Objects.equals(parameterName, that.parameterName) &&
-                Objects.equals(originalType, that.originalType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, parameterName, originalType);
-    }
-
-    @Override
-    public String toString() {
-        return "SetterBuilderMethodInfo{" +
-                "name='" + name + '\'' +
-                ", parameterName='" + parameterName + '\'' +
-                ", originalType=" + originalType +
-                '}';
-    }
-
     /**
      * Builder class
      */

@@ -23,24 +23,4 @@ public class BotSuperClassInfo extends ClassInfo {
         return generatedClass;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BotSuperClassInfo that)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(generatedClass, that.generatedClass);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), generatedClass);
-    }
-
-    @Override
-    public String toString() {
-        return "BotSuperClassInfo{" +
-                super.toString() +
-                ", generatedClass=" + generatedClass +
-                '}';
-    }
 }

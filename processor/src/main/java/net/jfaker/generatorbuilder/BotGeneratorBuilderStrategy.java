@@ -38,7 +38,7 @@ public class BotGeneratorBuilderStrategy extends BotGenerator<BuildMethodInfoBui
         if (buildMethodInfo.getBuilderInstantiateMethod() == STATIC_METHOD_CLASS){
             statementBuilder.append(String.format("return %s.%s%n", buildMethodInfo.getUsedInStatement().getSimpleName(), buildMethodInfo.getBuilderMethodName()));
         } else {
-            builder.addStatement("var builder = new $N()", buildMethodInfo.getUsedInStatement().getSimpleName());
+            builder.addStatement("var builder = new $N()", buildMethodInfo.getUsedInStatement().getQualifiedName());
             statementBuilder.append("return builder\n");
         }
         for (int i = 0; i < settersBuilderStatement.size(); i++) {

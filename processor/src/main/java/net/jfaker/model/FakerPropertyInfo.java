@@ -35,26 +35,4 @@ public class FakerPropertyInfo {
         return initialization;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FakerPropertyInfo that)) return false;
-        return Objects.equals(type, that.type) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(initialization, that.initialization);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, name, initialization);
-    }
-
-    @Override
-    public String toString() {
-        return "FakerPropertyInfo{" +
-                "type=" + type +
-                ", name='" + name + '\'' +
-                ", initialization='" + initialization + '\'' +
-                '}';
-    }
 }

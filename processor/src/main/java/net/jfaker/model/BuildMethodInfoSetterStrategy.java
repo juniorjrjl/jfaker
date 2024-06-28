@@ -57,18 +57,8 @@ public class BuildMethodInfoSetterStrategy extends BuildMethodInfo{
             return this;
         }
 
-        public BuildMethodInfoSetterStrategyBuilder withSetterStatement(final SetterStatement setterStatement) {
-            this.settersStatement.add(setterStatement);
-            return this;
-        }
-
         public BuildMethodInfoSetterStrategyBuilder withSettersValues(final List<String> settersValues) {
             this.settersValues.addAll(settersValues);
-            return this;
-        }
-
-        public BuildMethodInfoSetterStrategyBuilder withSettersValues(final String setterValue) {
-            this.settersValues.add(setterValue);
             return this;
         }
 

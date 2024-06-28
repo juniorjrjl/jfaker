@@ -49,11 +49,6 @@ public class BuildMethodInfoConstructorStrategy extends BuildMethodInfo{
             return this;
         }
 
-        public BuildMethodConstructorStrategyBuilder withSettersValues(final String setterValue) {
-            this.settersValues.add(setterValue);
-            return this;
-        }
-
         public BuildMethodInfoConstructorStrategy build() {
             return new BuildMethodInfoConstructorStrategy(name, resultClass, usedInStatement, settersValues);
         }
