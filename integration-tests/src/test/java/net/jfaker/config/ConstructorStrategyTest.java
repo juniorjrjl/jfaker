@@ -244,17 +244,17 @@ class ConstructorStrategyTest {
                         import net.jfaker.annotation.ConstructorStrategy;
                        
                         @FakerInfo(
-                                botsConfiguration = {
-                                    @AutoFakerBot(
-                                                            generatedInstance = "%s.%s",
-                                                            packageToGenerate = "net.jfaker.bot",
-                                                            botBuildStrategy = @BotBuildStrategy(
-                                                                constructorStrategy = @ConstructorStrategy(
-                                                                    argsNames = {"java.lang.String", "boolean"}
-                                                                )
-                                                            )
-                                                    )
-                                }
+                            botsConfiguration = {
+                                @AutoFakerBot(
+                                    generatedInstance = "%s.%s",
+                                    packageToGenerate = "net.jfaker.bot",
+                                    botBuildStrategy = @BotBuildStrategy(
+                                        constructorStrategy = @ConstructorStrategy(
+                                            argsNames = {"java.lang.String", "boolean"}
+                                        )
+                                    )
+                                )
+                            }
                         )
                         public class CustomFaker extends Faker {}
                        
