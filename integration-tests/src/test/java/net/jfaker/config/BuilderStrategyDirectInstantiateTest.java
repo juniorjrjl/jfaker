@@ -128,9 +128,9 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasGeneratedInPackage("net.jfaker.bot")
-                .inheritsFrom(AbstractBot.class.getSimpleName())
+                .inheritsFrom()
                 .hasPrivateNonArgsConstructor()
                 .hasPrivatePropertiesWithTypes(
                         Map.of(
@@ -234,7 +234,7 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithNullInitValue(Map.of("stub", "String"));
 
     }
@@ -304,7 +304,7 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .notContainsStatement(List.of(
                         "private Supplier<String> stub = () -> faker.",
                         ".setStub(stub.get())"
@@ -380,7 +380,7 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithNullInitValue(Map.of("stub", "Object"));
     }
 
@@ -457,7 +457,7 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithInitValue(Map.of("stub", "faker.animal().name()"));
     }
 
@@ -545,7 +545,7 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithInitValue(Map.of("nested", "NestedDTOBot.builder().build()"));
     }
 
@@ -634,7 +634,7 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithInitValue(Map.of("nested", "NestedDTOBot.builder().build(faker.number().randomDigitNotZero())"));
     }
 
@@ -704,7 +704,7 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .buildMethodUsingBuilderStrategyWithDirectInstantiate(
                         "net.jfaker.dto.SampleDTO.SampleDTOBuilder",
                         "with",
@@ -780,7 +780,7 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .buildMethodUsingBuilderStrategyWithDirectInstantiate(
                         "net.jfaker.dto.SampleDTO.SampleDTOBuilder",
                         "a",
@@ -861,7 +861,7 @@ class BuilderStrategyDirectInstantiateTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .buildMethodUsingBuilderStrategyWithDirectInstantiate(
                         "net.jfaker.dto.SampleDTOBuilder",
                         "with",

@@ -167,9 +167,9 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasGeneratedInPackage("net.jfaker.bot")
-                .inheritsFrom(AbstractBot.class.getSimpleName())
+                .inheritsFrom()
                 .hasPrivateNonArgsConstructor()
                 .hasPrivatePropertiesWithTypes(
                         Map.of("id", "Long",
@@ -285,7 +285,7 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithNullInitValue(Map.of("stub", "String"));
 
     }
@@ -355,7 +355,7 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .notContainsStatement(List.of(
                         "private Supplier<String> stub = () -> faker.",
                         ".setStub(stub.get())"
@@ -432,7 +432,7 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithNullInitValue(Map.of("stub", "Object"));
     }
 
@@ -510,7 +510,7 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithInitValue(Map.of("stub", "faker.animal().name()"));
     }
 
@@ -598,7 +598,7 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithInitValue(Map.of("nested", "NestedDTOBot.builder().build()"));
     }
 
@@ -687,7 +687,7 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithInitValue(Map.of("nested", "NestedDTOBot.builder().build(faker.number().randomDigitNotZero())"));
     }
 
@@ -756,7 +756,7 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .buildMethodUsingBuilderStrategyWithStaticMethodClass(
                         "builderInstance",
                         "build",
@@ -830,7 +830,7 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .buildMethodUsingBuilderStrategyWithStaticMethodClass(
                         "builder",
                         "buildInstance",
@@ -904,7 +904,7 @@ class BuilderStrategyStaticMethodTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .buildMethodUsingBuilderStrategyWithStaticMethodClass(
                         "builder",
                         "build",

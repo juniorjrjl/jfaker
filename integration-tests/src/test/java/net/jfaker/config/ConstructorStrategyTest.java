@@ -70,9 +70,9 @@ class ConstructorStrategyTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasGeneratedInPackage("net.jfaker.bot")
-                .inheritsFrom(AbstractBot.class.getSimpleName())
+                .inheritsFrom()
                 .hasPrivateNonArgsConstructor()
                 .hasPrivatePropertiesWithTypes(
                         Map.of("id","Integer",
@@ -105,7 +105,10 @@ class ConstructorStrategyTest {
                 )
                 .containsStaticBuilderMethod()
                 .containsStaticBuildMethod()
-                .buildMethodUsingConstructorStrategy(List.of("id", "name", "year", "pages", "price", "discount"));
+                .buildMethodUsingConstructorStrategy(
+                        "net.jfaker.dto.BookDTO",
+                        List.of("id", "name", "year", "pages", "price", "discount")
+                );
     }
 
     @Test
@@ -158,7 +161,7 @@ class ConstructorStrategyTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithNullInitValue(Map.of("stub", "String"));
 
     }
@@ -209,7 +212,7 @@ class ConstructorStrategyTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithNullInitValue(Map.of("stub", "Object"));
     }
 
@@ -267,7 +270,7 @@ class ConstructorStrategyTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .containsStatement(List.of(
                         """
                             public %s build() {
@@ -276,7 +279,7 @@ class ConstructorStrategyTest {
                                         stub2.get()
                                         );
                             }
-                        """.formatted(generatedClass, generatedClass)));
+                        """.formatted(generatedClass, "net.jfaker.dto.SampleDTO")));
 
     }
 
@@ -337,7 +340,7 @@ class ConstructorStrategyTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithInitValue(Map.of("stub", "faker.animal().name()"));
     }
 
@@ -409,7 +412,7 @@ class ConstructorStrategyTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithInitValue(Map.of("nested", "NestedDTOBot.builder().build()"));
     }
 
@@ -482,7 +485,7 @@ class ConstructorStrategyTest {
         var classCode = compilation.generatedSourceFile(botQualifiedName).orElseThrow()
                 .getCharContent(true).toString();
 
-        BotAssert.assertThat(classCode, botSimpleName, generatedClass)
+        BotAssert.assertThat(classCode, botSimpleName, generatedClass, AbstractBot.class.getSimpleName())
                 .hasPrivatePropertiesWithInitValue(Map.of("nested", "NestedDTOBot.builder().build(faker.number().randomDigitNotZero())"));
     }
 

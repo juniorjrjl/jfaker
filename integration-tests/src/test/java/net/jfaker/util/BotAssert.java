@@ -10,15 +10,23 @@ public class BotAssert extends AbstractAssert<BotAssert, String> {
 
     private final String className;
     private final String generatedClass;
+    private final String abstractClass;
 
-    protected BotAssert(final String classCode, final String className, final String generatedClass) {
+    protected BotAssert(final String classCode,
+                        final String className,
+                        final String generatedClass,
+                        final String abstractClass) {
         super(classCode, BotAssert.class);
         this.className = className;
         this.generatedClass = generatedClass;
+        this.abstractClass = abstractClass;
     }
 
-    public static BotAssert assertThat(final String classCode, final String className, final String generatedClass){
-        return new BotAssert(classCode, className, generatedClass);
+    public static BotAssert assertThat(final String classCode,
+                                       final String className,
+                                       final String generatedClass,
+                                       final String abstractClass){
+        return new BotAssert(classCode, className, generatedClass, abstractClass);
     }
 
     public BotAssert hasGeneratedInPackage(final String packageName){
@@ -32,11 +40,38 @@ public class BotAssert extends AbstractAssert<BotAssert, String> {
         return this;
     }
 
-    public BotAssert inheritsFrom(final String superClass){
+    public BotAssert inheritsFrom(){
         isNotNull();
 
-        if (!actual.contains("extends " + superClass)){
-            failWithMessage("Expected class inherits from <%s> ", superClass);
+        if (!actual.contains("extends " + abstractClass)){
+            failWithMessage("Expected class inherits from <%s> ", abstractClass);
+        }
+
+        return this;
+    }
+
+    public BotAssert boGenerateSpecifiedType(){
+        isNotNull();
+
+        containsStatement(
+                List.of(
+                        String.format("public class %s extends %s<%s> {", className, abstractClass, generatedClass),
+                        String.format("public %s build() {", generatedClass)
+                )
+        );
+
+        return this;
+    }
+
+    public BotAssert hasName(){
+        isNotNull();
+        final var classDefinition = "public class ";
+
+        if (!actual.contains(String.format("public class %s extends %s<%s> {", className, abstractClass, generatedClass))){
+            final var firstIndex = actual.indexOf(classDefinition) + classDefinition.length();
+            final var lastIndex = actual.indexOf(String.format(" extends %s<%s> {", abstractClass, generatedClass));
+            final var actualClassName = actual.substring(firstIndex, lastIndex);
+            failWithMessage("Expected class name is <%s> but is <%s>", className, actualClassName);
         }
 
         return this;
@@ -180,10 +215,11 @@ public class BotAssert extends AbstractAssert<BotAssert, String> {
         return this;
     }
 
-    public BotAssert buildMethodUsingConstructorStrategy(final List<String> properties){
+    public BotAssert buildMethodUsingConstructorStrategy(final String generatedQualifiedName,
+                                                         final List<String> properties){
         isNotNull();
         final var indexStartBuildStatement = getIndexOfStatement(
-                "        return new %s(".formatted(generatedClass),
+                "        return new %s(".formatted(generatedQualifiedName),
                 "Expected bot using constructor strategy"
         );
 

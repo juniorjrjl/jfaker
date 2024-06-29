@@ -36,7 +36,7 @@ public class BotGeneratorConstructorStrategy extends BotGenerator<BuildMethodInf
                 .returns(ClassName.get(resultClass.getPackageName(), resultClass.getSimpleName()))
                 .addStatement(
                         "return new $N(\n$N\n)",
-                        usedInStatement.getSimpleName(),
+                        usedInStatement.getQualifiedName(),
                         params.substring(0, params.length() -2)
                 )
                 .addJavadoc(
