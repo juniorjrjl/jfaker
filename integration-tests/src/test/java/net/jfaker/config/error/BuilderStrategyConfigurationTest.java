@@ -14,6 +14,13 @@ public class BuilderStrategyConfigurationTest {
 
     @Test
     void whenUseBuilderStrategyWithoutBuilderQualifiedNameThenWaringIt(){
+        final var generatedClass = JavaFileObjects.forSourceLines(
+                "net.jfaker.dto.SampleDTO",
+                """
+                       package net.jfaker.dto;
+                       public record SampleDTO(String stub){}
+                       """
+        );
         final var botConfig= JavaFileObjects.forSourceLines(
                 "net.jfaker.config.CustomFaker",
                 """
@@ -39,7 +46,7 @@ public class BuilderStrategyConfigurationTest {
                        """);
         final var compilation = Compiler.javac()
                 .withProcessors(new BotProcessor())
-                .compile(botConfig);
+                .compile(generatedClass, botConfig);
         CompilationSubject.assertThat(compilation).failed();
 
         assertThat(compilation.errors()).isNotEmpty();

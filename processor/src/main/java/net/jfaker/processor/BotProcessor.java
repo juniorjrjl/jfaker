@@ -20,6 +20,7 @@ import net.jfaker.model.ClassInfo;
 import net.jfaker.model.FakerPropertyInfo;
 import net.jfaker.model.PropertyInfo;
 import net.jfaker.model.SetterBuilderMethodInfo;
+import net.jfaker.util.CustomElements;
 import net.jfaker.util.ValidationUtil;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -53,7 +54,7 @@ public class BotProcessor extends AbstractProcessor {
     
     @Override
     public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
-        final var elementUtils = processingEnv.getElementUtils();
+        final var elementUtils = new CustomElements(processingEnv.getElementUtils());
         final BotGenerator<BuildMethodInfoConstructorStrategy> botGeneratorConstructorStrategy =
                 new BotGeneratorConstructorStrategy(processingEnv.getTypeUtils(), PROPERTIES_INITIALIZERS);
         final BotGenerator<BuildMethodInfoSetterStrategy> botGeneratorSetterStrategy =
