@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AutoFakerConfigurationTest {
+class FakerInfoConfigurationTest {
 
     @Test
     void whenHasNonMappedBotThenWaringIt(){
@@ -54,7 +54,7 @@ class AutoFakerConfigurationTest {
                        import net.jfaker.annotation.AutoFakerBot;
                        import net.jfaker.annotation.FakerInfo;
                        
-                       @FakerInfo(botsConfiguration = {})
+                       @FakerInfo(botsConfiguration = @AutoFakerBot(packageToGenerate = "", generatedInstance = ""))
                        public class CustomFaker {}
                        
                        """);

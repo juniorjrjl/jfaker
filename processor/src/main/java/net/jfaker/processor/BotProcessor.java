@@ -4,6 +4,7 @@ import com.squareup.javapoet.JavaFile;
 import net.jfaker.annotation.BotBuildStrategy;
 import net.jfaker.annotation.FakerInfo;
 import net.jfaker.annotation.FieldConfiguration;
+import net.jfaker.exception.JFakerException;
 import net.jfaker.factory.BuildFactory;
 import net.jfaker.factory.PropertyFactory;
 import net.jfaker.generatorbuilder.BotGenerator;
@@ -19,6 +20,7 @@ import net.jfaker.model.ClassInfo;
 import net.jfaker.model.FakerPropertyInfo;
 import net.jfaker.model.PropertyInfo;
 import net.jfaker.model.SetterBuilderMethodInfo;
+import net.jfaker.util.ValidationUtil;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -41,7 +43,6 @@ import static javax.tools.Diagnostic.Kind.ERROR;
 import static net.jfaker.generatorbuilder.property.PropertyUtil.PROPERTIES_INITIALIZERS;
 import static net.jfaker.util.ValidationUtil.validateAutoFakerBot;
 import static net.jfaker.util.ValidationUtil.validateFakerInfo;
-import static net.jfaker.util.ValidationUtil.validateFieldConfiguration;
 
 /**
  * Class who will process annotation {@link net.jfaker.annotation.FakerInfo FakerInfo} and generate bots
@@ -65,18 +66,23 @@ public class BotProcessor extends AbstractProcessor {
                 .findFirst();
         if (optionalElement.isEmpty()) return false;
 
-        final var botClassesInfo = buildBotClass(optionalElement.get(), elementUtils);
+        try {
+            final var botClassesInfo = buildBotClass(optionalElement.get(), elementUtils);
 
-        final var javaFile = botClassesInfo.stream().map(b -> {
-            if (b.getBuildMethodInfo() instanceof BuildMethodInfoSetterStrategy buildMethodInfo){
-                return botGeneratorSetterStrategy.create(b, buildMethodInfo).indent("    ").build();
-            } else if (b.getBuildMethodInfo() instanceof BuildMethodInfoConstructorStrategy buildMethodInfo) {
-                return botGeneratorConstructorStrategy.create(b, buildMethodInfo).indent("    ").build();
-            } else {
-                return botGeneratorBuilderStrategy.create(b, (BuildMethodInfoBuilderStrategy) b.getBuildMethodInfo()).indent("    ").build();
-            }
-        });
-        javaFile.forEach(f -> writeClass(f, processingEnv.getFiler()));
+            final var javaFile = botClassesInfo.stream().map(b -> {
+                if (b.getBuildMethodInfo() instanceof BuildMethodInfoSetterStrategy buildMethodInfo){
+                    return botGeneratorSetterStrategy.create(b, buildMethodInfo).indent("    ").build();
+                } else if (b.getBuildMethodInfo() instanceof BuildMethodInfoConstructorStrategy buildMethodInfo) {
+                    return botGeneratorConstructorStrategy.create(b, buildMethodInfo).indent("    ").build();
+                } else {
+                    return botGeneratorBuilderStrategy.create(b, (BuildMethodInfoBuilderStrategy) b.getBuildMethodInfo()).indent("    ").build();
+                }
+            });
+            javaFile.forEach(f -> writeClass(f, processingEnv.getFiler()));
+        }catch (JFakerException ex){
+            processingEnv.getMessager().printMessage(ERROR, ex.getMessage());
+            return false;
+        }
 
         return true;
 
@@ -94,10 +100,10 @@ public class BotProcessor extends AbstractProcessor {
                 elementUtils.getTypeElement(fakerElement.toString())
         );
         final var fakerInfoAnnotation = fakerElement.getAnnotation(FakerInfo.class);
-        validateFakerInfo(processingEnv.getMessager(), fakerInfoAnnotation, fakerInfo);
+        validateFakerInfo(fakerInfoAnnotation, fakerInfo);
         return Stream.of(fakerInfoAnnotation.botsConfiguration())
                 .map(b -> {
-                    validateAutoFakerBot(processingEnv.getMessager(), b);
+                    validateAutoFakerBot(b);
                     final var generatedClass = new ClassInfo(
                             b.generatedInstance(),
                             elementUtils.getTypeElement(b.generatedInstance())
@@ -123,7 +129,6 @@ public class BotProcessor extends AbstractProcessor {
                     final var propsMap = PropertyFactory.generateProps(
                             generatedClass,
                             elementUtils,
-                            processingEnv.getMessager(),
                             botBuildStrategy
                     );
                     return BotClassInfo.builder()
@@ -181,7 +186,7 @@ public class BotProcessor extends AbstractProcessor {
         } else {
             fieldsConfiguration = (Stream.of(builderStrategy.fieldsConfiguration()).toList());
         }
-        fieldsConfiguration.forEach(f -> validateFieldConfiguration(processingEnv.getMessager(), f));
+        fieldsConfiguration.forEach(ValidationUtil::validateFieldConfiguration);
         return fieldsConfiguration.stream().collect(Collectors.toMap(
                         FieldConfiguration::name,
                         f -> {
