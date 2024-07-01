@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.jfaker"
-version = "0.0.1"
+version = "1.0.0"
 
 subprojects {
     apply(plugin = "jacoco")
