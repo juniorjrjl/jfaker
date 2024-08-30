@@ -26,19 +26,11 @@ publishing{
                 description.set("Create instances with random data for tests")
                 url.set("https://github.com/juniorjrjl/jfaker")
 
-                licenses{
-                    license{
-                        name.set("")
-                        url.set("")
-                        distribution.set("")
-                    }
-                }
-
                 developers {
                     developer{
-                        id.set("")
+                        id.set("juniorjrjl")
                         name.set("José Luiz Junior")
-                        email.set("")
+                        email.set("junior.jr.jl@gmail.com")
                     }
                 }
 
@@ -55,10 +47,10 @@ publishing{
     repositories{
         maven {
             name = "sonatype"
-            url = uri("")
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
-                username = project.findProperty("") as String?
-                password = project.findProperty("") as String?
+                username = project.findProperty("ossrhUsername") as String?
+                password = project.findProperty("ossrhPassword") as String?
             }
         }
     }
@@ -66,11 +58,6 @@ publishing{
 }
 
 signing {
-    useInMemoryPgpKeys(
-        findProperty("signing.keyId") as String?,
-        findProperty("signing.secretKeyRingFile") as String?,
-        findProperty("signing.password") as String?
-    )
     sign(publishing.publications["mavenJava"])
 }
 

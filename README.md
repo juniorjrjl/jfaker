@@ -104,3 +104,9 @@ Como você percebeu o nosso bot nos permite definir para qualquer campo um dado 
 
 Todos os bots gerados por padrão irão extender a classe
 `AbstractBot` para disponibilizar alguns métodos, o metodo build sem argumentos para a criação da instância com dados aleatórios e uma sobrecarga que recebe um long como argumento e gera uma lista com X bots, onde x é o número passado como argumento para o build ( para mais informações da classe `AbstractBot`)
+
+# debug
+
+```
+./gradlew --no-daemon -Dorg.gradle.debug=true clean build
+```
